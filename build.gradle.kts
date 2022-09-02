@@ -9,9 +9,9 @@ plugins {
     id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
 }
 
-group = "net.satellyte"
+group = "com.existencesmp"
 version = "1.0.0"
-description = "My Kotlin Paper Plugin"
+description = "Existence SMP Museum"
 
 repositories {
     mavenCentral()
@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    paperDevBundle("1.19.1-R0.1-SNAPSHOT")
+    paperDevBundle("1.19.2-R0.1-SNAPSHOT")
     implementation("net.axay:kspigot:1.19.0")
 }
 
@@ -44,29 +44,9 @@ tasks {
 }
 
 bukkit {
-    name = "Starter"
+    name = "Museum"
     description = description
-    main = "net.satellyte.starter.Starter"
+    main = "com.existencesmp.museum.Museum"
     version = version
     apiVersion = "1.19"
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            artifactId = "starter"
-            from(components["java"])
-        }
-    }
-    repositories {
-        maven {
-            val releasesRepoUrl = "https://repo.example.com/releases"
-            val snapshotsRepoUrl = "https://repo.example.com/snapshots"
-            url = uri(if (project.hasProperty("release")) releasesRepoUrl else snapshotsRepoUrl)
-            credentials {
-                username = System.getenv("MAVEN_REPO_USERNAME")
-                password = System.getenv("MAVEN_REPO_PASSWORD")
-            }
-        }
-    }
 }
