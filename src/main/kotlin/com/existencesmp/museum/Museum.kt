@@ -15,6 +15,7 @@ import net.axay.kspigot.main.KSpigot
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.format.TextColor
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -150,7 +151,7 @@ class Museum : KSpigot() {
                                 italic = false
                             }
                             +literalText(" ")
-                            +literalText("Minecraft 1.13.2 • 148MB • 0 Chunks") {
+                            +literalText("Minecraft 1.13.2 • 148MB • 34,937 Chunks") {
                                 color = KColors.DARKGRAY
                                 italic = false
                             }
@@ -285,28 +286,28 @@ class Museum : KSpigot() {
                 }
 
                 button(Slots.RowThreeSlotTwo, seasonOneIcon) {
-                    server.dispatchCommand(server.consoleSender, "tpp ${it.player.name} s1")
+                    server.dispatchCommand(server.consoleSender, "mvtp ${it.player.name} s1")
                     it.player.playSound(Sound.sound(Key.key("ui.button.click"), Sound.Source.MASTER, 0.3f, 1f), Sound.Emitter.self())
                 }
                 button(Slots.RowThreeSlotThree, seasonTwoIcon) {
-                    server.dispatchCommand(server.consoleSender, "tpp ${it.player.name} s2")
+                    server.dispatchCommand(server.consoleSender, "mvtp ${it.player.name} s2")
                     it.player.playSound(Sound.sound(Key.key("ui.button.click"), Sound.Source.MASTER, 0.3f, 1f), Sound.Emitter.self())
                 }
                 button(Slots.RowThreeSlotFour, seasonThreeIcon) {
-                    server.dispatchCommand(server.consoleSender, "tpp ${it.player.name} s3")
+                    server.dispatchCommand(server.consoleSender, "mvtp ${it.player.name} s3")
                     it.player.playSound(Sound.sound(Key.key("ui.button.click"), Sound.Source.MASTER, 0.3f, 1f), Sound.Emitter.self())
                 }
 
                 button(Slots.RowTwoSlotThree, hardcoreIcon) {
-                    server.dispatchCommand(server.consoleSender, "tpp ${it.player.name} hardcore")
+                    server.dispatchCommand(server.consoleSender, "mvtp ${it.player.name} hardcore")
                     it.player.playSound(Sound.sound(Key.key("ui.button.click"), Sound.Source.MASTER, 0.3f, 1f), Sound.Emitter.self())
                 }
                 button(Slots.RowTwoSlotFour, keystoneIcon) {
-                    server.dispatchCommand(server.consoleSender, "tpp ${it.player.name} keystone")
+                    server.dispatchCommand(server.consoleSender, "mvtp ${it.player.name} keystone")
                     it.player.playSound(Sound.sound(Key.key("ui.button.click"), Sound.Source.MASTER, 0.3f, 1f), Sound.Emitter.self())
                 }
                 button(Slots.RowTwoSlotFive, amplifiedIcon) {
-                    server.dispatchCommand(server.consoleSender, "ttp ${it.player.name} amplified")
+                    server.dispatchCommand(server.consoleSender, "mvtp ${it.player.name} amplified")
                     it.player.playSound(Sound.sound(Key.key("ui.button.click"), Sound.Source.MASTER, 0.3f, 1f), Sound.Emitter.self())
                 }
                 button(Slots.RowTwoSlotSix, createIcon) {
@@ -314,11 +315,29 @@ class Museum : KSpigot() {
                 }
 
                 button(Slots.RowThreeSlotSix, communityOneIcon) {
-                    server.dispatchCommand(server.consoleSender, "ttp ${it.player.name} cs1")
+                    server.dispatchCommand(server.consoleSender, "mvtp ${it.player.name} cs1")
                     it.player.playSound(Sound.sound(Key.key("ui.button.click"), Sound.Source.MASTER, 0.3f, 1f), Sound.Emitter.self())
                 }
                 button(Slots.RowThreeSlotSeven, communityTwoIcon) {
                     it.player.playSound(Sound.sound(Key.key("item.shield.break"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self())
+                }
+
+                button(Slots.RowFourSlotFive, itemStack(Material.OCHRE_FROGLIGHT) {
+                    meta {
+                        name = literalText("Museum Hub") {
+                            color = KColors.GOLD
+                            italic = false
+                        }
+                        addLore {
+                            +literalText("[ ᴄʟɪᴄᴋ ᴛᴏ ᴡᴀʀᴘ ]") {
+                                color = KColors.AQUA
+                                italic = false
+                            }
+                        }
+                    }
+                }) {
+                    server.dispatchCommand(it.player, "mvtp ${it.player.name} world")
+                    it.player.playSound(Sound.sound(Key.key("ui.button.click"), Sound.Source.MASTER, 0.3f, 1f), Sound.Emitter.self())
                 }
             }
         }
@@ -328,7 +347,9 @@ class Museum : KSpigot() {
         }
 
         listen<InventoryClickEvent> {
-            it.isCancelled = true
+            if (it.whoClicked.gameMode == GameMode.ADVENTURE) {
+                it.isCancelled = true
+            }
         }
 
         listen<PlayerInteractEvent> {
