@@ -16,8 +16,6 @@ class Museum : KSpigot() {
 
     override fun startup() {
         listen<PlayerMoveEvent> {
-            logger.info(it.player.world.name)
-            logger.info(it.to.y.toString())
             if (it.player.world.name == "world" && it.to.y <= -3.0) {
                 it.player.velocity = Vector(it.player.velocity.x, 1.0, it.player.velocity.z)
             }
