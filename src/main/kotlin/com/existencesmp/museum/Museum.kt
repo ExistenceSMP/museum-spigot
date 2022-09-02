@@ -101,7 +101,7 @@ class Museum : KSpigot() {
                                 italic = false
                             }
                             +literalText(" ")
-                            +literalText("Minecraft 1.13.2 • 2.59GB • 0 Chunks") {
+                            +literalText("Minecraft 1.13.2 • 2.59GB • 732,273 Chunks") {
                                 color = KColors.DARKGRAY
                                 italic = false
                             }
@@ -126,7 +126,7 @@ class Museum : KSpigot() {
                                 italic = false
                             }
                             +literalText(" ")
-                            +literalText("Minecraft 1.15.2 • 2.15GB • 0 Chunks") {
+                            +literalText("Minecraft 1.15.2 • 2.15GB • 839,460 Chunks") {
                                 color = KColors.DARKGRAY
                                 italic = false
                             }
@@ -176,7 +176,7 @@ class Museum : KSpigot() {
                                 italic = false
                             }
                             +literalText(" ")
-                            +literalText("Minecraft 1.15.2 • 3.4GB • 0 Chunks") {
+                            +literalText("Minecraft 1.15.2 • 3.4GB • 1,080,016 Chunks") {
                                 color = KColors.DARKGRAY
                                 italic = false
                             }
@@ -201,7 +201,7 @@ class Museum : KSpigot() {
                                 italic = false
                             }
                             +literalText(" ")
-                            +literalText("Minecraft 1.17.1 • 951.6MB • 0 Chunks") {
+                            +literalText("Minecraft 1.17.1 • 951.6MB • 180,015 Chunks") {
                                 color = KColors.DARKGRAY
                                 italic = false
                             }
