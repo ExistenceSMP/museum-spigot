@@ -17,6 +17,8 @@ import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.GameMode
 import org.bukkit.Material
+import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -364,6 +366,14 @@ class Museum : KSpigot() {
                 it.player.velocity = Vector(it.player.velocity.x, 1.0, it.player.velocity.z)
                 it.player.playSound(Sound.sound(Key.key("entity.player.attack.sweep"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self())
             }
+        }
+
+        listen<FoodLevelChangeEvent> {
+            it.isCancelled = true
+        }
+
+        listen<EntityDamageEvent> {
+            it.isCancelled = true
         }
     }
 
