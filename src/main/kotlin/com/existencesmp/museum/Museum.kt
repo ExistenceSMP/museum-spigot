@@ -27,10 +27,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.player.PlayerChangedWorldEvent
-import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerMoveEvent
+import org.bukkit.event.player.*
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
@@ -46,6 +43,48 @@ class Museum : KSpigot() {
     }
 
     override fun startup() {
+        fun swapMode(player: Player) {
+            if (player.gameMode != GameMode.SPECTATOR) {
+                player.title(literalText(""), literalText("sᴘᴇᴄᴛᴀᴛᴏʀ ᴍᴏᴅᴇ") { color = KColors.AQUA}, Duration.ZERO, Duration.ofMillis(500), Duration.ofMillis(500))
+                player.gameMode = GameMode.SPECTATOR
+            } else {
+                player.title(literalText(""), literalText("ᴀᴅᴠᴇɴᴛᴜʀᴇ ᴍᴏᴅᴇ") { color = KColors.DARKAQUA}, Duration.ZERO, Duration.ofMillis(500), Duration.ofMillis(500))
+                player.gameMode = GameMode.ADVENTURE
+
+            }
+        }
+        command("mode") {
+            runs { swapMode(player) }
+        }
+
+        fun updateListName(player: Player) {
+            val team = player.scoreboard.teams.toList()[0]
+            val worldName = when(player.world.name) {
+                "world" -> "Museum Hub"
+                "s1", "s1_nether", "s1_the_end" -> "Season 1"
+                "s2", "s2_nether", "s2_the_end" -> "Season 2"
+                "s3", "s3_nether", "s3_the_end" -> "Season 3"
+                "hardcore", "hardcore_nether", "hardcore_the_end" -> "Project Hardcore"
+                "keystone", "keystone_nether", "keystone_the_end" -> "Project Keystone"
+                "amplified", "amplified_nether", "amplified_the_end" -> "Project Amplified"
+                "cs1", "cs1_nether", "cs1_the_end" -> "Community Server 1"
+                else -> "Unknown World"
+            }
+            val worldColor = when(player.world.name) {
+                "world" -> TextColor.color(255, 224, 161)
+                "s1", "s1_nether", "s1_the_end" -> TextColor.color(255, 224, 161)
+                "s2", "s2_nether", "s2_the_end" -> TextColor.color(167, 250, 167)
+                "s3", "s3_nether", "s3_the_end" -> TextColor.color(255, 184, 184)
+                "hardcore", "hardcore_nether", "hardcore_the_end" -> TextColor.color(255, 184, 184)
+                "keystone", "keystone_nether", "keystone_the_end" -> TextColor.color(255, 184, 184)
+                "amplified", "amplified_nether", "amplified_the_end" -> TextColor.color(196, 196, 196)
+                "cs1", "cs1_nether", "cs1_the_end" -> TextColor.color(255, 224, 161)
+                else -> TextColor.color(196, 196, 196)
+            }
+
+            player.playerListName(team.prefix().append(player.displayName().color(team.color())).append(literalText(" [$worldName]") { color = worldColor }))
+        }
+
         val navigator = itemStack(Material.RECOVERY_COMPASS) {
             meta {
                 name = literalText("Museum Navigator") {
@@ -357,10 +396,17 @@ class Museum : KSpigot() {
         listen<PlayerJoinEvent> {
             it.player.inventory.setItem(0, navigator)
             it.player.inventory.setItem(8, ItemStack(Material.SPYGLASS))
+            it.player.gameMode = GameMode.ADVENTURE
             it.player.allowFlight = true
+            updateListName(it.player)
         }
 
         listen<PlayerChangedWorldEvent> {
+            it.player.allowFlight = true
+            updateListName(it.player)
+        }
+
+        listen<PlayerGameModeChangeEvent> {
             it.player.allowFlight = true
         }
 
