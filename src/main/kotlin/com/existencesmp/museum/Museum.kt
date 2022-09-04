@@ -385,7 +385,7 @@ class Museum : KSpigot() {
         }
 
         listen<PlayerMoveEvent> {
-            if (it.player.gameMode != GameMode.CREATIVE && it.player.world.name == "world" && it.to.y <= -3.0) {
+            if (it.player.gameMode == GameMode.ADVENTURE && it.player.world.name == "world" && it.to.y <= -3.0) {
                 it.player.velocity = Vector(it.player.velocity.x, 1.0, it.player.velocity.z)
                 it.player.playSound(Sound.sound(Key.key("entity.player.attack.sweep"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self())
             }
