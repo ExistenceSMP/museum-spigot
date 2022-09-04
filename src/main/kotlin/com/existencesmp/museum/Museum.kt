@@ -1,12 +1,12 @@
 package com.existencesmp.museum
 
+import io.papermc.paper.event.player.AsyncChatDecorateEvent
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.chat.literalText
-import net.axay.kspigot.commands.CommandContext
 import net.axay.kspigot.commands.command
 import net.axay.kspigot.commands.runs
-import net.axay.kspigot.commands.simpleExecutes
 import net.axay.kspigot.event.listen
+import net.axay.kspigot.extensions.bukkit.title
 import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
@@ -16,7 +16,6 @@ import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.axay.kspigot.main.KSpigot
-import net.axay.kspigot.runnables.task
 import net.axay.kspigot.runnables.taskRunLater
 import net.axay.kspigot.utils.fireworkItemStack
 import net.kyori.adventure.key.Key
@@ -28,12 +27,14 @@ import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
+import java.time.Duration
 
 class Museum : KSpigot() {
     companion object {
@@ -263,7 +264,7 @@ class Museum : KSpigot() {
                                 italic = false
                             }
                             +literalText(" ")
-                            +literalText("Minecraft 1.17.1 • 2.63GB • 0 Chunks") {
+                            +literalText("Minecraft 1.17.1 • 2.63GB • 638,288 Chunks") {
                                 color = KColors.DARKGRAY
                                 italic = false
                             }
@@ -355,11 +356,19 @@ class Museum : KSpigot() {
 
         listen<PlayerJoinEvent> {
             it.player.inventory.setItem(0, navigator)
+            it.player.inventory.setItem(8, ItemStack(Material.SPYGLASS))
+            it.player.allowFlight = true
+        }
+
+        listen<PlayerChangedWorldEvent> {
+            it.player.allowFlight = true
         }
 
         listen<InventoryClickEvent> {
             if (it.whoClicked.gameMode == GameMode.ADVENTURE) {
-                it.isCancelled = true
+                if (!(it.clickedInventory == it.whoClicked.inventory && it.whoClicked.inventory.getItem(it.slot)?.type == Material.SPYGLASS)) {
+                    it.isCancelled = true
+                }
             }
         }
 
@@ -376,7 +385,7 @@ class Museum : KSpigot() {
         }
 
         listen<PlayerMoveEvent> {
-            if (it.player.world.name == "world" && it.to.y <= -3.0) {
+            if (it.player.gameMode != GameMode.CREATIVE && it.player.world.name == "world" && it.to.y <= -3.0) {
                 it.player.velocity = Vector(it.player.velocity.x, 1.0, it.player.velocity.z)
                 it.player.playSound(Sound.sound(Key.key("entity.player.attack.sweep"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self())
             }
@@ -392,9 +401,12 @@ class Museum : KSpigot() {
 
         fun elytra(player: Player) {
             if (player.inventory.chestplate?.type == Material.ELYTRA) {
+                player.title(literalText(""), literalText("ᴅɪsᴀʙʟᴇᴅ ᴇʟʏᴛʀᴀ") { color = KColors.RED }, Duration.ZERO, Duration.ofMillis(500), Duration.ofMillis(500))
                 player.inventory.chestplate = ItemStack(Material.AIR)
                 player.inventory.setItem(4, ItemStack(Material.AIR))
             } else {
+                player.title(literalText(""), literalText("ᴇɴᴀʙʟᴇᴅ ᴇʟʏᴛʀᴀ") { color = KColors.GREEN}, Duration.ZERO, Duration.ofMillis(500), Duration.ofMillis(500))
+                player.playSound(Sound.sound(Key.key("entity.player.attack.sweep"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self())
                 player.inventory.chestplate = itemStack(Material.ELYTRA) { meta { isUnbreakable = true } }
                 player.inventory.setItem(4, fireworkItemStack(64) { power = 3 })
                 player.velocity = Vector(player.velocity.x, 3.0, player.velocity.z)
