@@ -401,12 +401,16 @@ class Museum : KSpigot() {
         }
 
         listen<PlayerChangedWorldEvent> {
-            it.player.allowFlight = true
+            taskRunLater(1, true) {
+                it.player.allowFlight = true
+            }
             updateListName(it.player)
         }
 
         listen<PlayerGameModeChangeEvent> {
-            it.player.allowFlight = true
+            taskRunLater(1, true) {
+                it.player.allowFlight = true
+            }
         }
 
         listen<InventoryClickEvent> {
