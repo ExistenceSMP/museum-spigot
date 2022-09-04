@@ -2,6 +2,10 @@ package com.existencesmp.museum
 
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.chat.literalText
+import net.axay.kspigot.commands.CommandContext
+import net.axay.kspigot.commands.command
+import net.axay.kspigot.commands.runs
+import net.axay.kspigot.commands.simpleExecutes
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
@@ -12,11 +16,15 @@ import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.axay.kspigot.main.KSpigot
+import net.axay.kspigot.runnables.task
+import net.axay.kspigot.runnables.taskRunLater
+import net.axay.kspigot.utils.fireworkItemStack
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.GameMode
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -24,6 +32,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.inventory.ItemFlag
+import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
 
 class Museum : KSpigot() {
@@ -359,6 +368,11 @@ class Museum : KSpigot() {
                 it.player.playSound(Sound.sound(Key.key("block.end_portal_frame.fill"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self())
                 it.player.openGUI(navigatorGui)
             }
+            if (it.item?.type == Material.FIREWORK_ROCKET) {
+                taskRunLater(1, true) {
+                    it.player.inventory.setItem(4, fireworkItemStack(64) { power = 3 })
+                }
+            }
         }
 
         listen<PlayerMoveEvent> {
@@ -374,6 +388,26 @@ class Museum : KSpigot() {
 
         listen<EntityDamageEvent> {
             it.isCancelled = true
+        }
+
+        fun elytra(player: Player) {
+            if (player.inventory.chestplate?.type == Material.ELYTRA) {
+                player.inventory.chestplate = ItemStack(Material.AIR)
+                player.inventory.setItem(4, ItemStack(Material.AIR))
+            } else {
+                player.inventory.chestplate = itemStack(Material.ELYTRA) { meta { isUnbreakable = true } }
+                player.inventory.setItem(4, fireworkItemStack(64) { power = 3 })
+                player.velocity = Vector(player.velocity.x, 3.0, player.velocity.z)
+                taskRunLater(5, true) {
+                    player.isGliding = true
+                }
+            }
+        }
+        command("elytra") {
+            runs { elytra(player) }
+        }
+        command("ely") {
+            runs { elytra(player) }
         }
     }
 
