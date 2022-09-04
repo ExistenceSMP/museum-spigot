@@ -348,7 +348,7 @@ class Museum : KSpigot() {
                         }
                     }
                 }) {
-                    server.dispatchCommand(it.player, "mvtp ${it.player.name} world")
+                    server.dispatchCommand(server.consoleSender, "mvtp ${it.player.name} world")
                     it.player.playSound(Sound.sound(Key.key("ui.button.click"), Sound.Source.MASTER, 0.3f, 1f), Sound.Emitter.self())
                 }
             }
