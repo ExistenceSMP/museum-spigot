@@ -50,7 +50,6 @@ class Museum : KSpigot() {
             } else {
                 player.title(literalText(""), literalText("ᴀᴅᴠᴇɴᴛᴜʀᴇ ᴍᴏᴅᴇ") { color = KColors.DARKAQUA}, Duration.ZERO, Duration.ofMillis(500), Duration.ofMillis(500))
                 player.gameMode = GameMode.ADVENTURE
-
             }
         }
         command("mode") {
