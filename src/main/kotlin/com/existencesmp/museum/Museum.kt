@@ -434,9 +434,19 @@ class Museum : KSpigot() {
         }
 
         listen<PlayerMoveEvent> {
-            if (it.player.gameMode == GameMode.ADVENTURE && it.player.world.name == "world" && it.to.y <= -3.0) {
-                it.player.velocity = Vector(it.player.velocity.x, 1.0, it.player.velocity.z)
-                it.player.playSound(Sound.sound(Key.key("entity.player.attack.sweep"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self())
+            if (it.player.gameMode == GameMode.ADVENTURE && it.player.world.name == "world") {
+                var x = 0; var y = 0; var z = 0
+
+                if (it.to.y <= -3.0) y++
+                if (it.to.x >= 100) x--
+                if (it.to.x <= -100) x++
+                if (it.to.z >= 120) z--
+                if (it.to.z <= -80) z++
+
+                if (x != 0 || y != 0 || z != 0) {
+                    it.player.velocity = Vector(it.player.velocity.x + x, it.player.velocity.y + y, it.player.velocity.z + z)
+                    it.player.playSound(Sound.sound(Key.key("entity.player.attack.sweep"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self())
+                }
             }
         }
 
