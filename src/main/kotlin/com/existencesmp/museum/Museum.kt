@@ -57,7 +57,7 @@ class Museum : KSpigot() {
         }
 
         fun updateListName(player: Player) {
-            val team = player.scoreboard.teams.toList()[0]
+            val team = server.scoreboardManager.mainScoreboard.getPlayerTeam(player)
             val worldName = when(player.world.name) {
                 "world" -> "Museum Hub"
                 "s1", "s1_nether", "s1_the_end" -> "Season 1"
@@ -81,7 +81,7 @@ class Museum : KSpigot() {
                 else -> TextColor.color(196, 196, 196)
             }
 
-            player.playerListName(team.prefix().append(player.displayName().color(team.color())).append(literalText(" [$worldName]") { color = worldColor }))
+            player.playerListName(team?.prefix()?.append(player.displayName().color(team.color()))?.append(literalText(" [$worldName]") { color = worldColor }))
         }
 
         val navigator = itemStack(Material.RECOVERY_COMPASS) {
