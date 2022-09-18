@@ -250,7 +250,7 @@ class Museum : KSpigot() {
                                     italic = false
                                 }
                                 +literalText(" ")
-                                +literalText("Minecraft 1.17.1 • 951.6MB • 180,015 Chunks") {
+                                +literalText("Minecraft 1.18.1 • 951.6MB • 180,015 Chunks") {
                                     color = KColors.DARKGRAY
                                     italic = false
                                 }
