@@ -63,7 +63,8 @@ class Museum : KSpigot() {
                 "keystone", "keystone_nether", "keystone_the_end" -> "Project Keystone"
                 "amplified", "amplified_nether", "amplified_the_end" -> "Project Amplified"
                 "cs1", "cs1_nether", "cs1_the_end" -> "Community Server 1"
-                "mafia_s1", "mafia_s1_nether", "mafia_s1_the_end" -> "Mafia Survival"
+                "mafia_s1", "mafia_s1_nether", "mafia_s1_the_end" -> "The Mafia Survival"
+                "mafia_s2", "mafia_s2_nether", "mafia_s2_the_end" -> "The Mafia: Caves & Cliffs"
                 else -> "Unknown World"
             }
             val worldColor = when(player.world.name) {
@@ -76,6 +77,7 @@ class Museum : KSpigot() {
                 "amplified", "amplified_nether", "amplified_the_end" -> TextColor.color(196, 196, 196)
                 "cs1", "cs1_nether", "cs1_the_end" -> TextColor.color(255, 224, 161)
                 "mafia_s1", "mafia_s1_nether", "mafia_s1_the_end" -> TextColor.color(255, 184, 184)
+                "mafia_s2", "mafia_s2_nether", "mafia_s2_the_end" -> TextColor.color(255, 184, 184)
                 else -> TextColor.color(196, 196, 196)
             }
 
@@ -336,7 +338,7 @@ class Museum : KSpigot() {
 
                     val mafiaSurvivalIcon = itemStack(Material.OAK_BOAT) {
                         meta {
-                            name = literalText("Mafia Survival") {
+                            name = literalText("The Mafia Survival") {
                                 color = KColors.DARKRED
                                 italic = false
                             }
@@ -352,6 +354,43 @@ class Museum : KSpigot() {
                                 }
                                 +literalText(" ")
                                 +literalText("Minecraft 1.17.1 • 1.91GB • 767,951 Chunks") {
+                                    color = KColors.DARKGRAY
+                                    italic = false
+                                }
+                            }
+                        }
+                    }
+
+                    val mafiaSurvivalTwoIcon = itemStack(Material.BIG_DRIPLEAF) {
+                        meta {
+                            name = literalText("The Mafia: ") {
+                                color = KColors.DARKRED
+                                italic = false
+                                text("Caves ") {
+                                    color = TextColor.color(192, 141, 101)
+                                    italic = false
+                                    text("& ") {
+                                        color = TextColor.color(159, 114, 216)
+                                        italic = false
+                                        text("Cliffs") {
+                                            color = TextColor.color(163, 194, 217)
+                                            italic = false
+                                        }
+                                    }
+                                }
+                            }
+                            addLore {
+                                +literalText("December 17th 2021 to November 12th 2022") {
+                                    color = TextColor.color(255, 184, 184)
+                                    italic = false
+                                }
+                                +literalText(" ")
+                                +literalText("[ ᴄʟɪᴄᴋ ᴛᴏ ᴡᴀʀᴘ ]") {
+                                    color = KColors.AQUA
+                                    italic = false
+                                }
+                                +literalText(" ")
+                                +literalText("Minecraft 1.18.1 • 2.55GB • 406,380 Chunks") {
                                     color = KColors.DARKGRAY
                                     italic = false
                                 }
@@ -397,8 +436,12 @@ class Museum : KSpigot() {
                     }
 
                     if (mafia) {
-                        button(Slots.RowOneSlotNine, mafiaSurvivalIcon) {
+                        button(Slots.RowOneSlotEight, mafiaSurvivalIcon) {
                             server.dispatchCommand(server.consoleSender, "mvtp ${it.player.name} mafia_s1")
+                            it.player.playSound(Sound.sound(Key.key("ui.button.click"), Sound.Source.MASTER, 0.3f, 1f), Sound.Emitter.self())
+                        }
+                        button(Slots.RowOneSlotNine, mafiaSurvivalTwoIcon) {
+                            server.dispatchCommand(server.consoleSender, "mvtp ${it.player.name} mafia_s2")
                             it.player.playSound(Sound.sound(Key.key("ui.button.click"), Sound.Source.MASTER, 0.3f, 1f), Sound.Emitter.self())
                         }
                     }
