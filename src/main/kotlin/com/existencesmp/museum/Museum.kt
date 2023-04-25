@@ -3,6 +3,7 @@ package com.existencesmp.museum
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.chat.literalText
 import net.axay.kspigot.commands.command
+import net.axay.kspigot.commands.literal
 import net.axay.kspigot.commands.runs
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.extensions.bukkit.title
@@ -268,7 +269,7 @@ class Museum : KSpigot() {
                                 italic = false
                             }
                             addLore {
-                                +literalText("TBA") {
+                                +literalText("January 1st 2023 to Present") {
                                     color = TextColor.color(179, 187, 230)
                                     italic = false
                                 }
@@ -546,24 +547,41 @@ class Museum : KSpigot() {
 
         fun elytra(player: Player) {
             if (player.inventory.chestplate?.type == Material.ELYTRA) {
+                player.playSound(Sound.sound(Key.key("block.lever.click"), Sound.Source.MASTER, 1f, 0.5f), Sound.Emitter.self())
                 player.title(literalText(""), literalText("ᴅɪsᴀʙʟᴇᴅ ᴇʟʏᴛʀᴀ") { color = KColors.RED }, Duration.ZERO, Duration.ofMillis(500), Duration.ofMillis(500))
                 player.inventory.chestplate = ItemStack(Material.AIR)
                 player.inventory.setItem(4, ItemStack(Material.AIR))
             } else {
+                player.playSound(Sound.sound(Key.key("block.lever.click"), Sound.Source.MASTER, 1f, 0.6f), Sound.Emitter.self())
                 player.title(literalText(""), literalText("ᴇɴᴀʙʟᴇᴅ ᴇʟʏᴛʀᴀ") { color = KColors.GREEN}, Duration.ZERO, Duration.ofMillis(500), Duration.ofMillis(500))
-                player.playSound(Sound.sound(Key.key("entity.player.attack.sweep"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self())
                 player.inventory.chestplate = itemStack(Material.ELYTRA) { meta { isUnbreakable = true } }
                 player.inventory.setItem(4, fireworkItemStack(64) { power = 3 })
+            }
+        }
+
+        fun boost(player: Player) {
+            if (player.inventory.chestplate?.type == Material.ELYTRA) {
+                player.playSound(Sound.sound(Key.key("entity.player.attack.sweep"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self())
                 player.velocity = Vector(player.velocity.x, 3.0, player.velocity.z)
                 taskRunLater(5, true) {
                     player.isGliding = true
                 }
+            } else {
+                elytra(player)
+                boost(player)
             }
         }
+
         command("elytra") {
+            literal("boost") {
+                runs { boost(player) }
+            }
             runs { elytra(player) }
         }
         command("ely") {
+            literal("boost") {
+                runs { boost(player) }
+            }
             runs { elytra(player) }
         }
     }
